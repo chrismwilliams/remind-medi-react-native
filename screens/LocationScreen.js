@@ -1,21 +1,20 @@
 import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  ScrollView,
-  RefreshControl
-} from "react-native";
+import { Platform, StyleSheet, View, Text } from "react-native";
+import { Text as Heading } from "react-native-elements";
 import { Constants, Location, Permissions } from "expo";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+
+import { GOOGLE_API } from "react-native-dotenv";
+import PharmacyCard from "../components/PharmacyCard";
 
 export default class LocationScreen extends Component {
   static navigationOptions = {
-    title: "Find My Pharmacy"
+    title: "Pharmacy Search"
   };
   state = {
     location: null,
     errorMessage: null,
-    refreshing: false
+    pharmacy: null
   };
 
   componentWillMount() {
@@ -29,12 +28,7 @@ export default class LocationScreen extends Component {
     }
   }
 
-  _onRefresh = () => {
-    this._getLocationAsync();
-  };
-
   _getLocationAsync = async () => {
-    this.setState({ refreshing: true });
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
       this.setState({
@@ -43,11 +37,11 @@ export default class LocationScreen extends Component {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location, refreshing: false });
+    this.setState({ location });
   };
 
   render() {
-    let text = "Loading...";
+    let { pharmacy } = this.state;
     let latitude,
       longitude = "";
     if (this.state.errorMessage) {
@@ -57,20 +51,34 @@ export default class LocationScreen extends Component {
       ({ latitude, longitude } = this.state.location.coords);
     }
     return (
-      <ScrollView
-        style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh}
-          />
-        }
-      >
-        <Text style={styles.welcome}>Find your local pharmacy</Text>
-        <Text>{text}</Text>
-        <Text style={styles.coords}>Latitude: {latitude}</Text>
-        <Text style={styles.coords}>Longitude: {longitude}</Text>
-      </ScrollView>
+      <View style={styles.container}>
+        <Heading h4 style={styles.textHeading}>
+          Local Pharmacy Search
+        </Heading>
+        <Text>{latitude}</Text>
+        <Text>{longitude}</Text>
+        <GooglePlacesAutocomplete
+          placeholder="Enter a location"
+          query={{
+            key: GOOGLE_API,
+            language: "en"
+          }}
+          GooglePlacesSearchQuery={{
+            rankby: "distance",
+            types: "pharmacy"
+          }}
+          fetchDetails={true}
+          currentLocation={true}
+          listViewDisplayed="false"
+          debounce={200}
+          onPress={(data, details = null) => {
+            console.log(details);
+            this.setState({ pharmacy: details });
+          }}
+          styles={styles.searchInput}
+        />
+        {pharmacy && <PharmacyCard pharmacy={pharmacy} />}
+      </View>
     );
   }
 }
@@ -78,12 +86,13 @@ export default class LocationScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    paddingVertical: 20
   },
-  welcome: {
-    fontSize: 20
+  textHeading: {
+    textAlign: "center"
   },
-  coords: {
-    color: "#bada55"
+  searchInput: {
+    width: "100%"
   }
 });
