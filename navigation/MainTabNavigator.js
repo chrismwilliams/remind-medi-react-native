@@ -43,7 +43,7 @@ const LocationStack = createStackNavigator({
 });
 
 LocationStack.navigationOptions = {
-  tabBarLabel: "Location",
+  tabBarLabel: "Pharmacies",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
