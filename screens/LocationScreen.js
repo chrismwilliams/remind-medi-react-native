@@ -35,12 +35,18 @@ export default class LocationScreen extends Component {
           fetchDetails={true}
           currentLocation={true}
           listViewDisplayed="false"
+          currentLocationLabel="Current Location"
           debounce={200}
           onPress={(data, details = null) => {
             console.log(details);
             this.setState({ pharmacy: details });
           }}
           styles={styles.searchInput}
+          textInputProps={{
+            onFocus: () => {
+              this.state.pharmacy && this.setState({ pharmacy: null });
+            }
+          }}
         />
         {pharmacy && <PharmacyCard pharmacy={pharmacy} />}
       </View>
