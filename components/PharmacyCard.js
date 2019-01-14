@@ -1,5 +1,15 @@
 import React, { PureComponent } from "react";
-import { Platform, Text, View, Linking, StyleSheet } from "react-native";
+import {
+  Platform,
+  Text,
+  View,
+  Linking,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  FlatList
+} from "react-native";
+import { Card, Button, Icon } from "react-native-elements";
 import { WebBrowser } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -15,7 +25,7 @@ export default class PharmacyCard extends PureComponent {
   render() {
     const { pharmacy } = this.props;
     return (
-      <View style={styles.cardContainer}>
+      <Animated.View style={styles.cardContainer}>
         <Card title={pharmacy.name}>
           <View style={styles.pharmacyDetail}>
             <Ionicons
@@ -25,35 +35,64 @@ export default class PharmacyCard extends PureComponent {
             />
             <Text style={styles.detailText}>{pharmacy.formatted_address}</Text>
           </View>
-          <View style={styles.pharmacyDetail}>
-            <Ionicons name="ios-cellular" size={26} style={styles.cardIcon} />
-            <TouchableOpacity
-              style={styles.detailText}
-              onPress={() => this._openTel(pharmacy.formatted_phone_number)}
-            >
-              <Text>{pharmacy.formatted_phone_number}</Text>
-            </TouchableOpacity>
-          </View>
-          {pharmacy.website && (
+          {pharmacy.opening_hours && (
             <View style={styles.pharmacyDetail}>
-              <Ionicons name="ios-browsers" size={26} style={styles.cardIcon} />
+              <Icon name="access-time" color="#666" />
+              <View style={styles.timesWrapper}>
+                <Text
+                  style={{
+                    ...styles.pharmacyStatus,
+                    ...(pharmacy.opening_hours.open_now
+                      ? styles.pharmacyOpen
+                      : styles.pharmacyClosed)
+                  }}
+                >
+                  Current status:{" "}
+                  {pharmacy.opening_hours.open_now ? "Open" : "Closed"}
+                </Text>
+                <FlatList
+                  data={pharmacy.opening_hours.weekday_text}
+                  renderItem={({ item }) => (
+                    <Text style={styles.pharmacyTimes}>{item}</Text>
+                  )}
+                  keyExtractor={item => item}
+                />
+              </View>
+            </View>
+          )}
+          {pharmacy.formatted_phone_number && (
+            <View style={styles.pharmacyDetail}>
+              <Icon name="phone" type="Foundation" color="#666" />
               <TouchableOpacity
-                style={styles.detailText}
-                onPress={() => this._openBrowser(pharmacy.website)}
+                onPress={() => this._openTel(pharmacy.formatted_phone_number)}
               >
-                <Text>{pharmacy.website}</Text>
+                <View style={styles.telWrapper}>
+                  <Text style={styles.pharmacyTel}>
+                    {pharmacy.formatted_phone_number}
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           )}
+          {pharmacy.website && (
+            <Button
+              style={styles.websiteBtn}
+              backgroundColor="#03a9f4"
+              rounded
+              fontWeight="bold"
+              title="Visit Website"
+              onPress={() => this._openBrowser(pharmacy.website)}
+            />
+          )}
         </Card>
-      </View>
+      </Animated.View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1
+    flex: 3
   },
   pharmacyDetail: {
     flexDirection: "row",
@@ -64,6 +103,37 @@ const styles = StyleSheet.create({
     color: "#666"
   },
   detailText: {
-    marginLeft: 7
+    paddingHorizontal: 10,
+    fontSize: 16
+  },
+  timesWrapper: {
+    paddingHorizontal: 10
+  },
+  pharmacyStatus: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 7
+  },
+  pharmacyTimes: {
+    fontSize: 16
+  },
+  pharmacyOpen: {
+    color: "#00cc00"
+  },
+  pharmacyClosed: {
+    color: "#ff0033"
+  },
+  telWrapper: {
+    marginHorizontal: 10,
+    paddingBottom: 5,
+    borderBottomColor: "#03a9f4",
+    borderBottomWidth: 1
+  },
+  pharmacyTel: {
+    fontSize: 16,
+    color: "#03a9f4"
+  },
+  websiteBtn: {
+    marginTop: 20
   }
 });
