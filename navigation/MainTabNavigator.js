@@ -5,6 +5,8 @@ import {
   createBottomTabNavigator
 } from "react-navigation";
 
+import Colors from "../constants/Colors";
+
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import ReminderScreen from "../screens/ReminderScreen";
@@ -52,8 +54,18 @@ LocationStack.navigationOptions = {
   )
 };
 
-export default createBottomTabNavigator({
-  HomeStack,
-  ReminderStack,
-  LocationStack
-});
+export default createBottomTabNavigator(
+  {
+    HomeStack,
+    ReminderStack,
+    LocationStack
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: Colors.tintColor,
+      style: {
+        borderTopColor: Colors.primaryColor
+      }
+    }
+  }
+);
