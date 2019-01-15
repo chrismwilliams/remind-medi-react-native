@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { Component } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { Text, Card, Button } from "react-native-elements";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Permissions } from "expo";
@@ -61,7 +61,7 @@ export default class LocationScreen extends Component {
             </Card>
           </View>
         ) : (
-          <Fragment>
+          <ScrollView>
             <Text h4 style={styles.textHeading}>
               Local Pharmacy Search
             </Text>
@@ -91,7 +91,7 @@ export default class LocationScreen extends Component {
               }}
             />
             {pharmacy && <PharmacyCard pharmacy={pharmacy} />}
-          </Fragment>
+          </ScrollView>
         )}
       </View>
     );
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingVertical: 20
+    marginTop: 20
   },
   errorWrapper: {
     flex: 1,
