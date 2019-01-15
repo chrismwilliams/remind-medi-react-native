@@ -13,6 +13,8 @@ import { Card, Button, Icon } from "react-native-elements";
 import { WebBrowser } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 
+import Colors from "../constants/Colors";
+
 export default class PharmacyCard extends PureComponent {
   _openBrowser = link => {
     WebBrowser.openBrowserAsync(link);
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
     color: "#00cc00"
   },
   pharmacyClosed: {
-    color: "#ff0033"
+    color: Colors.errorColor
   },
   telWrapper: {
     marginHorizontal: 10,
