@@ -35,7 +35,7 @@ export default class PharmacyCard extends PureComponent {
               size={26}
               style={styles.cardIcon}
             />
-            <Text style={styles.detailText}>{pharmacy.formatted_address}</Text>
+            <Text style={styles.detailText}>{pharmacy.vicinity}</Text>
           </View>
           {pharmacy.opening_hours && (
             <View style={styles.pharmacyDetail}>
