@@ -1,15 +1,37 @@
 import React from "react";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
+import {
+  Text,
+  FormLabel,
+  FormInput,
+  FormValidationMessage
+} from "react-native-elements";
 
 export default class ReminderScreen extends React.Component {
   static navigationOptions = {
-    title: "Add Reminder"
+    title: "New Reminder"
+  };
+
+  state = {
+    name: ""
+  };
+
+  updateName = text => {
+    this.setState({
+      name: text
+    });
   };
 
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text>Add a New Medication</Text>
+        <Text h4 style={styles.headingTxt}>
+          Add a New Medication
+        </Text>
+        <View style={styles.formContainer}>
+          <FormLabel>Medication Name:</FormLabel>
+          <FormInput onChangeText={this.updateName} />
+        </View>
       </ScrollView>
     );
   }
@@ -20,5 +42,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
     backgroundColor: "#fff"
+  },
+  headingTxt: {
+    textAlign: "center"
+  },
+  formContainer: {
+    marginTop: 20
   }
 });
