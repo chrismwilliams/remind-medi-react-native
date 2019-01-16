@@ -8,9 +8,12 @@ import { GOOGLE_API } from "react-native-dotenv";
 import PharmacyCard from "../components/PharmacyCard";
 
 import Colors from "../constants/Colors";
+import HeaderStyles from "../constants/HeaderStyles";
+import StyledTitle from "../components/StyledTitle";
 export default class LocationScreen extends Component {
   static navigationOptions = {
-    title: "Pharmacy Search"
+    title: "Pharmacy Search",
+    ...HeaderStyles
   };
   state = {
     pharmacy: null,
@@ -62,9 +65,7 @@ export default class LocationScreen extends Component {
           </View>
         ) : (
           <ScrollView>
-            <Text h4 style={styles.textHeading}>
-              Local Pharmacy Search
-            </Text>
+            <StyledTitle>Find a Pharmacy</StyledTitle>
             <GooglePlacesAutocomplete
               placeholder="Enter a location"
               query={{
@@ -101,8 +102,13 @@ export default class LocationScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    marginTop: 20
+    paddingTop: 100,
+    backgroundColor: Colors.primaryColor
+  },
+  textHeading: {
+    textAlign: "center",
+    color: "#fff",
+    marginBottom: 20
   },
   errorWrapper: {
     flex: 1,
@@ -115,9 +121,6 @@ const styles = StyleSheet.create({
   },
   errorBtn: {
     marginTop: 20
-  },
-  textHeading: {
-    textAlign: "center"
   },
   searchInput: {
     width: "100%"

@@ -3,19 +3,20 @@ import { View, ScrollView, StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
 
 import Colors from "../constants/Colors";
+import StyledTitle from "../components/StyledTitle";
+import HeaderStyles from "../constants/HeaderStyles";
 import ReminderForm from "../components/ReminderForm";
 
 export default class ReminderScreen extends React.Component {
   static navigationOptions = {
-    title: "New Reminder"
+    title: "New Reminder",
+    ...HeaderStyles
   };
 
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text h4 style={styles.headingTxt}>
-          Add a New Medication
-        </Text>
+        <StyledTitle>Add Your Medication</StyledTitle>
         <ReminderForm />
       </ScrollView>
     );
@@ -25,11 +26,7 @@ export default class ReminderScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 100,
     backgroundColor: Colors.primaryColor
-  },
-  headingTxt: {
-    textAlign: "center",
-    color: "#fff"
   }
 });
