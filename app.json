@@ -2,7 +2,7 @@
   "expo": {
     "name": "remind-medi",
     "slug": "remind-medi",
-    "privacy": "public",
+    "privacy": "unlisted",
     "sdkVersion": "32.0.0",
     "platforms": ["ios", "android"],
     "version": "1.0.0",
