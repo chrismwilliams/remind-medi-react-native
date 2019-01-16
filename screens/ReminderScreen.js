@@ -1,6 +1,5 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-import { Text } from "react-native-elements";
+import { ScrollView, StyleSheet } from "react-native";
 
 import Colors from "../constants/Colors";
 import StyledTitle from "../components/StyledTitle";
@@ -26,7 +25,7 @@ export default class ReminderScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100,
+    paddingTop: 80,
     backgroundColor: Colors.primaryColor
   }
 });

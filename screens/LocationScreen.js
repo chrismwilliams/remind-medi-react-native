@@ -102,7 +102,7 @@ export default class LocationScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 100,
+    paddingTop: 80,
     backgroundColor: Colors.primaryColor
   },
   textHeading: {
