@@ -3,10 +3,12 @@ import { View, FlatList, StyleSheet } from "react-native";
 import {
   Text,
   Badge,
+  Button,
   FormLabel,
   FormInput,
   FormValidationMessage
 } from "react-native-elements";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 import Colors from "../constants/Colors";
 
@@ -24,8 +26,6 @@ const DayOptions = [
 ];
 const MonthlyOptions = [...Array(4)].map((val, i) => i + 1);
 
-console.log(MonthlyOptions);
-
 export default class ReminderForm extends PureComponent {
   constructor(props) {
     super(props);
@@ -36,7 +36,9 @@ export default class ReminderForm extends PureComponent {
       selectedPeriod: "",
       timesPerDay: "",
       selectedDays: [],
-      selectedMonthlyPeriod: ""
+      selectedMonthlyPeriod: "",
+      showTimes: false,
+      dateTimePickerVisible: false
     };
     this.frequencyInputRef = React.createRef();
   }
@@ -49,6 +51,21 @@ export default class ReminderForm extends PureComponent {
     this.setState({
       [stateName]: value
     });
+  };
+
+  showTimePicker = () => {
+    this.setState({
+      dateTimePickerVisible: true
+    });
+  };
+
+  hideTimePicker = () => {
+    this.setState({ dateTimePickerVisible: false });
+  };
+
+  handleTimePicked = time => {
+    console.log(time);
+    this.hideTimePicker();
   };
 
   showInputError = inputName => {
@@ -79,7 +96,7 @@ export default class ReminderForm extends PureComponent {
     return (
       <Badge
         onPress={() => {
-          this.setState({ timesPerDay: item });
+          this.setState({ timesPerDay: item, showTimes: true });
         }}
         value={item}
         containerStyle={{
@@ -148,7 +165,9 @@ export default class ReminderForm extends PureComponent {
       selectedPeriod,
       timesPerDay,
       selectedDays,
-      selectedMonthlyPeriod
+      selectedMonthlyPeriod,
+      showTimes,
+      dateTimePickerVisible
     } = this.state;
     return (
       <View style={styles.formContainer}>
@@ -213,7 +232,7 @@ export default class ReminderForm extends PureComponent {
           </View>
         ) : selectedPeriod === "Other" ? (
           <View style={styles.listWrapper}>
-            <Text style={styles.optionText}>How often per month:</Text>
+            <Text style={styles.optionText}>Times per month:</Text>
             <FlatList
               horizontal={true}
               data={MonthlyOptions}
@@ -223,6 +242,28 @@ export default class ReminderForm extends PureComponent {
             />
           </View>
         ) : null}
+        {showTimes && (
+          <View style={styles.listWrapper}>
+            <Text style={styles.optionText}>Set your alarm(s) below:</Text>
+            <View style={styles.timeWrapper}>
+              <Button
+                rounded
+                title="Set time"
+                icon={{ name: "access-time" }}
+                containerViewStyle={styles.timeButton}
+                onPress={this.showTimePicker}
+              />
+              <Text style={styles.chosenTime}>12:00</Text>
+            </View>
+            <DateTimePicker
+              isVisible={dateTimePickerVisible}
+              onConfirm={this.handleTimePicked}
+              onCancel={this.hideTimePicker}
+              mode="time"
+              titleIOS="Pick a time"
+            />
+          </View>
+        )}
       </View>
     );
   }
@@ -258,5 +299,22 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "bold",
     fontSize: 18
+  },
+  timeWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  timeButton: {
+    marginLeft: 0
+  },
+  chosenTime: {
+    marginRight: 40,
+    padding: 10,
+    color: Colors.tintColor,
+    fontWeight: "bold",
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: Colors.tintColor
   }
 });
