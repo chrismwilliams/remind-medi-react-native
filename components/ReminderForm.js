@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import React, { Component } from "react";
+import { View, StyleSheet } from "react-native";
 import {
   Text,
   Badge,
@@ -9,6 +9,9 @@ import {
   FormValidationMessage
 } from "react-native-elements";
 import DateTimePicker from "react-native-modal-datetime-picker";
+
+import OptionList from "./OptionList";
+import TimeList from "./TimeList";
 
 import Colors from "../constants/Colors";
 
@@ -26,7 +29,7 @@ const DayOptions = [
 ];
 const MonthlyOptions = [...Array(4)].map((val, i) => i + 1);
 
-export default class ReminderForm extends PureComponent {
+export default class ReminderForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,6 +41,8 @@ export default class ReminderForm extends PureComponent {
       selectedDays: [],
       selectedMonthlyPeriod: "",
       showTimes: false,
+      numOfTimes: null,
+      timesPicked: [],
       dateTimePickerVisible: false
     };
     this.frequencyInputRef = React.createRef();
@@ -96,7 +101,11 @@ export default class ReminderForm extends PureComponent {
     return (
       <Badge
         onPress={() => {
-          this.setState({ timesPerDay: item, showTimes: true });
+          this.setState({
+            timesPerDay: item,
+            showTimes: true,
+            numOfTimes: item
+          });
         }}
         value={item}
         containerStyle={{
@@ -167,6 +176,7 @@ export default class ReminderForm extends PureComponent {
       selectedDays,
       selectedMonthlyPeriod,
       showTimes,
+      numOfTimes,
       dateTimePickerVisible
     } = this.state;
     return (
@@ -194,74 +204,60 @@ export default class ReminderForm extends PureComponent {
             "Please enter the required amount"}
         </FormValidationMessage>
 
-        <View style={styles.listWrapper}>
-          <Text style={styles.optionText}>
-            How often do you require your medication:
-          </Text>
-          <FlatList
-            horizontal={true}
-            data={PeriodOptions}
-            extraData={selectedPeriod}
-            renderItem={this.periodItem}
-            keyExtractor={item => item}
-          />
-        </View>
+        <OptionList
+          text="How often do you require your medication:"
+          horizontal={true}
+          data={PeriodOptions}
+          extraData={selectedPeriod}
+          renderItem={this.periodItem}
+          extractor={item => item}
+        />
 
         {selectedPeriod === "Daily" ? (
-          <View style={styles.listWrapper}>
-            <Text style={styles.optionText}>Times per Day:</Text>
-            <FlatList
-              horizontal={true}
-              data={DailyOptions}
-              extraData={timesPerDay}
-              renderItem={this.timesItem}
-              keyExtractor={item => item.toString()}
-            />
-          </View>
+          <OptionList
+            text="Times per Day:"
+            horizontal={true}
+            data={DailyOptions}
+            extraData={timesPerDay}
+            renderItem={this.timesItem}
+            extractor={item => item.toString()}
+          />
         ) : selectedPeriod === "Certain Days" ? (
-          <View style={styles.listWrapper}>
-            <Text style={styles.optionText}>Select which days:</Text>
-            <FlatList
-              horizontal={false}
-              numColumns={1}
-              data={DayOptions}
-              extraData={selectedDays}
-              renderItem={this.dayItem}
-              keyExtractor={item => item}
-            />
-          </View>
+          <OptionList
+            text="Select which days:"
+            horizontal={false}
+            data={DayOptions}
+            extraData={selectedDays}
+            renderItem={this.dayItem}
+            extractor={item => item}
+            numColumns={1}
+          />
         ) : selectedPeriod === "Other" ? (
-          <View style={styles.listWrapper}>
-            <Text style={styles.optionText}>Times per month:</Text>
-            <FlatList
-              horizontal={true}
-              data={MonthlyOptions}
-              extraData={selectedMonthlyPeriod}
-              renderItem={this.monthItem}
-              keyExtractor={item => item.toString()}
-            />
-          </View>
+          <OptionList
+            text="Times per month:"
+            horizontal={true}
+            data={MonthlyOptions}
+            extraData={selectedMonthlyPeriod}
+            renderItem={this.monthItem}
+            extractor={item => item.toString()}
+          />
         ) : null}
         {showTimes && (
           <View style={styles.listWrapper}>
             <Text style={styles.optionText}>Set your alarm(s) below:</Text>
-            <View style={styles.timeWrapper}>
-              <Button
-                rounded
-                title="Set time"
-                icon={{ name: "access-time" }}
-                containerViewStyle={styles.timeButton}
-                onPress={this.showTimePicker}
+            <View>
+              <TimeList
+                numberOfTimes={numOfTimes}
+                openTimePicker={this.showTimePicker}
               />
-              <Text style={styles.chosenTime}>12:00</Text>
+              <DateTimePicker
+                isVisible={dateTimePickerVisible}
+                onConfirm={this.handleTimePicked}
+                onCancel={this.hideTimePicker}
+                mode="time"
+                titleIOS="Pick a time"
+              />
             </View>
-            <DateTimePicker
-              isVisible={dateTimePickerVisible}
-              onConfirm={this.handleTimePicked}
-              onCancel={this.hideTimePicker}
-              mode="time"
-              titleIOS="Pick a time"
-            />
           </View>
         )}
       </View>
@@ -271,7 +267,8 @@ export default class ReminderForm extends PureComponent {
 
 const styles = StyleSheet.create({
   formContainer: {
-    paddingTop: 20
+    flex: 1,
+    paddingVertical: 20
   },
   inputText: {
     color: Colors.tintColor,
@@ -299,22 +296,5 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "bold",
     fontSize: 18
-  },
-  timeWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  timeButton: {
-    marginLeft: 0
-  },
-  chosenTime: {
-    marginRight: 40,
-    padding: 10,
-    color: Colors.tintColor,
-    fontWeight: "bold",
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: Colors.tintColor
   }
 });
