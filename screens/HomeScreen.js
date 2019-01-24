@@ -3,16 +3,17 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   StatusBar
 } from "react-native";
+import { Text, Icon } from "react-native-elements";
 import { WebBrowser } from "expo";
 
 import HeaderStyles from "../constants/HeaderStyles";
+import ReminderList from "../components/ReminderList";
 
-import { MonoText } from "../components/StyledText";
+import Colors from "../constants/Colors";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -29,40 +30,29 @@ export default class HomeScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require("../assets/images/robot-dev.png")
-                  : require("../assets/images/robot-prod.png")
-              }
-              style={styles.welcomeImage}
+            <Icon
+              name="pill"
+              type="material-community"
+              color="#fff"
+              size={28}
             />
+            <Text h1 style={styles.welcomeText}>
+              Remind Medi
+            </Text>
           </View>
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
+          <ReminderList />
 
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View
-              style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-            >
-              <MonoText style={styles.codeHighlightText}>
-                screens/HomeScreen.js
-              </MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>Hello world!!!</Text>
-          </View>
-
-          <View style={styles.helpContainer}>
+          <View style={styles.linkContainer}>
+            <Text style={styles.infoText}>
+              This is a demo app created by Chris Williams
+            </Text>
             <TouchableOpacity
-              onPress={this._handleHelpPress}
-              style={styles.helpLink}
+              style={styles.link}
+              onPress={this._handleOpenRepoLink}
             >
-              <Text style={styles.helpLinkText}>
-                Help, it didn’t automatically reload!
-              </Text>
+              <Icon name="github" type="font-awesome" color="#fff" size={28} />
+              <Text style={styles.linkText}>View Source Code</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -70,38 +60,9 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
+  _handleOpenRepoLink = () => {
     WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/development-mode"
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      "https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes"
+      "https://github.com/chrismwilliams/remind-medi-react-native"
     );
   };
 }
@@ -109,22 +70,23 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: "rgba(0,0,0,0.4)",
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: "center"
+    paddingTop: 10,
+    backgroundColor: Colors.primaryColor
   },
   contentContainer: {
-    paddingTop: 30
+    flex: 1,
+    paddingVertical: 30,
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   welcomeContainer: {
     alignItems: "center",
     marginTop: 10,
     marginBottom: 20
+  },
+  welcomeText: {
+    color: "#fff",
+    fontSize: 24
   },
   welcomeImage: {
     width: 100,
@@ -133,39 +95,30 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginLeft: -10
   },
-  getStartedContainer: {
-    alignItems: "center",
-    marginHorizontal: 50
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: "rgba(96,100,109, 0.8)"
-  },
-  codeHighlightContainer: {
-    backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: "rgba(96,100,109, 1)",
-    lineHeight: 24,
-    textAlign: "center"
-  },
-  navigationFilename: {
-    marginTop: 5
-  },
-  helpContainer: {
-    marginTop: 15,
+  linkContainer: {
     alignItems: "center"
   },
-  helpLink: {
-    paddingVertical: 15
+  infoText: {
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "#fff",
+    fontSize: 15,
+    textAlign: "center",
+    fontStyle: "italic"
   },
-  helpLinkText: {
-    fontSize: 14,
-    color: "#2e78b7"
+  link: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.tintColor,
+    padding: 18,
+    borderRadius: 5
+  },
+  linkText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center"
   }
 });
