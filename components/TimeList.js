@@ -4,32 +4,35 @@ import { Text, Button } from "react-native-elements";
 
 import Colors from "../constants/Colors";
 
-export default class TimeList extends Component {
-  state = {};
-
-  render() {
-    const { numberOfTimes, openTimePicker } = this.props;
-    let timesArr = [];
-    for (let i = 0; i < numberOfTimes; i++) {
-      timesArr.push(
-        <View style={styles.timeWrapper} key={i}>
-          <Button
-            rounded
-            title={`Set time ${i + 1}`}
-            icon={{ name: "access-time", size: 28 }}
-            containerViewStyle={styles.timeButton}
-            backgroundColor="grey"
-            fontWeight="bold"
-            onPress={openTimePicker}
-          />
-          <View style={styles.chosenTimeWrapper}>
-            <Text style={styles.chosenTime}>--:--</Text>
-          </View>
+export default function timeList({
+  numberOfAlerts,
+  currentAlertArray,
+  openTimePicker
+}) {
+  let timesArray = [];
+  for (let i = 0; i < numberOfAlerts; i++) {
+    timesArray.push(
+      <View style={styles.timeWrapper} key={i}>
+        <Button
+          rounded
+          title={`Set time ${i + 1}`}
+          icon={{ name: "access-time", size: 28 }}
+          containerViewStyle={styles.timeButton}
+          backgroundColor="grey"
+          fontWeight="bold"
+          onPress={() => {
+            openTimePicker(i);
+          }}
+        />
+        <View style={styles.chosenTimeWrapper}>
+          <Text style={styles.chosenTime}>
+            {currentAlertArray[i] ? currentAlertArray[i] : "--:--"}
+          </Text>
         </View>
-      );
-    }
-    return <View>{timesArr}</View>;
+      </View>
+    );
   }
+  return <View>{timesArray}</View>;
 }
 
 const styles = StyleSheet.create({
