@@ -17,7 +17,7 @@ import Colors from "../constants/Colors";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: "My reminders",
+    title: "My Reminders",
     ...HeaderStyles
   };
 
@@ -34,7 +34,7 @@ export default class HomeScreen extends React.Component {
               name="pill"
               type="material-community"
               color="#fff"
-              size={28}
+              size={30}
             />
             <Text h1 style={styles.welcomeText}>
               Remind Medi
