@@ -40,7 +40,7 @@ export default class ReminderForm extends Component {
       timesPerDay: "",
       selectedDays: [],
       selectedMonthlyPeriod: "",
-      showTimes: false,
+      showTimesList: false,
       numOfTimes: null,
       timesPicked: [],
       dateTimePickerVisible: false
@@ -55,6 +55,13 @@ export default class ReminderForm extends Component {
   handleInputChange = (stateName, value) => {
     this.setState({
       [stateName]: value
+    });
+  };
+
+  showTimeSlots = amount => {
+    this.setState({
+      numOfTimes: amount,
+      showTimesList: true
     });
   };
 
@@ -102,10 +109,9 @@ export default class ReminderForm extends Component {
       <Badge
         onPress={() => {
           this.setState({
-            timesPerDay: item,
-            showTimes: true,
-            numOfTimes: item
+            timesPerDay: item
           });
+          this.showTimeSlots(item);
         }}
         value={item}
         containerStyle={{
@@ -134,6 +140,7 @@ export default class ReminderForm extends Component {
           this.setState({
             selectedDays: updatedDays
           });
+          this.showTimeSlots(updatedDays.length);
         }}
         value={item}
         containerStyle={{
@@ -152,6 +159,7 @@ export default class ReminderForm extends Component {
       <Badge
         onPress={() => {
           this.setState({ selectedMonthlyPeriod: item });
+          this.showTimeSlots(item);
         }}
         value={item}
         containerStyle={{
@@ -175,7 +183,7 @@ export default class ReminderForm extends Component {
       timesPerDay,
       selectedDays,
       selectedMonthlyPeriod,
-      showTimes,
+      showTimesList,
       numOfTimes,
       dateTimePickerVisible
     } = this.state;
@@ -242,7 +250,7 @@ export default class ReminderForm extends Component {
             extractor={item => item.toString()}
           />
         ) : null}
-        {showTimes && (
+        {showTimesList && (
           <View style={styles.listWrapper}>
             <Text style={styles.optionText}>Set your alarm(s) below:</Text>
             <View>
