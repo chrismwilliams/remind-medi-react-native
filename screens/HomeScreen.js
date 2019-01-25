@@ -51,8 +51,12 @@ export default class HomeScreen extends React.Component {
               style={styles.link}
               onPress={this._handleOpenRepoLink}
             >
-              <Icon name="github" type="font-awesome" color="#fff" size={28} />
-              <Text style={styles.linkText}>View Source Code</Text>
+              <Icon
+                name="github"
+                type="font-awesome"
+                color={Colors.tintColor}
+              />
+              <Text style={styles.linkText}>Source Code</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -102,23 +106,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "#fff",
-    fontSize: 15,
+    fontSize: 14,
     textAlign: "center",
     fontStyle: "italic"
   },
   link: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.tintColor,
-    padding: 18,
-    borderRadius: 5
+    alignItems: "center"
   },
   linkText: {
-    marginLeft: 10,
-    fontSize: 16,
+    marginLeft: 8,
+    fontSize: 14,
     fontWeight: "bold",
-    color: "#fff",
+    color: Colors.tintColor,
     textAlign: "center"
   }
 });
