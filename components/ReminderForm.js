@@ -41,8 +41,9 @@ export default class ReminderForm extends Component {
       selectedDays: [],
       selectedMonthlyPeriod: "",
       showTimesList: false,
-      numOfTimes: null,
+      numberOfAlerts: null,
       timesPicked: [],
+      timePickPointer: null,
       dateTimePickerVisible: false
     };
     this.frequencyInputRef = React.createRef();
@@ -59,25 +60,38 @@ export default class ReminderForm extends Component {
   };
 
   showTimeSlots = amount => {
+    let newTimesArray = [...this.state.timesPicked];
+    newTimesArray.splice(amount);
     this.setState({
-      numOfTimes: amount,
-      showTimesList: true
+      numberOfAlerts: amount,
+      showTimesList: true,
+      timesPicked: newTimesArray
     });
   };
 
-  showTimePicker = () => {
+  showTimePicker = index => {
+    // TODO: open the picker with the time set previously if set
     this.setState({
-      dateTimePickerVisible: true
+      dateTimePickerVisible: true,
+      timePickPointer: index
     });
-  };
-
-  hideTimePicker = () => {
-    this.setState({ dateTimePickerVisible: false });
   };
 
   handleTimePicked = time => {
-    console.log(time);
+    const timeDate = new Date(time);
+    const hours = timeDate.getHours();
+    const minutes = timeDate.getMinutes();
+
+    let timesArray = [...this.state.timesPicked];
+    timesArray[this.state.timePickPointer] = `${hours}:${minutes}`;
+    this.setState({
+      timesPicked: timesArray
+    });
     this.hideTimePicker();
+  };
+
+  hideTimePicker = () => {
+    this.setState({ dateTimePickerVisible: false, timePickPointer: null });
   };
 
   showInputError = inputName => {
@@ -184,7 +198,8 @@ export default class ReminderForm extends Component {
       selectedDays,
       selectedMonthlyPeriod,
       showTimesList,
-      numOfTimes,
+      numberOfAlerts,
+      timesPicked,
       dateTimePickerVisible
     } = this.state;
     return (
@@ -255,8 +270,9 @@ export default class ReminderForm extends Component {
             <Text style={styles.optionText}>Set your alarm(s) below:</Text>
             <View>
               <TimeList
-                numberOfTimes={numOfTimes}
-                openTimePicker={this.showTimePicker}
+                numberOfAlerts={numberOfAlerts}
+                currentAlertArray={timesPicked}
+                openTimePicker={index => this.showTimePicker(index)}
               />
               <DateTimePicker
                 isVisible={dateTimePickerVisible}
