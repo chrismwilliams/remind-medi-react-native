@@ -16,11 +16,15 @@ export default class TimeList extends Component {
           <Button
             rounded
             title={`Set time ${i + 1}`}
-            icon={{ name: "access-time" }}
+            icon={{ name: "access-time", size: 28 }}
             containerViewStyle={styles.timeButton}
+            backgroundColor="grey"
+            fontWeight="bold"
             onPress={openTimePicker}
           />
-          <Text style={styles.chosenTime}>{`${i + 7}:00 am`}</Text>
+          <View style={styles.chosenTimeWrapper}>
+            <Text style={styles.chosenTime}>--:--</Text>
+          </View>
         </View>
       );
     }
@@ -32,19 +36,22 @@ const styles = StyleSheet.create({
   timeWrapper: {
     marginBottom: 12,
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    justifyContent: "space-between"
   },
   timeButton: {
     marginLeft: 0
   },
-  chosenTime: {
+  chosenTimeWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 40,
     padding: 10,
-    color: Colors.tintColor,
-    fontWeight: "bold",
-    fontSize: 18,
     borderWidth: 1,
     borderColor: Colors.tintColor
+  },
+  chosenTime: {
+    color: Colors.tintColor,
+    fontWeight: "bold",
+    fontSize: 18
   }
 });
