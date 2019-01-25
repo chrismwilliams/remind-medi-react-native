@@ -84,12 +84,19 @@ export default class LocationScreen extends Component {
               onPress={(data, details = null) => {
                 this.setState({ pharmacy: details });
               }}
-              styles={styles.searchInput}
+              styles={{
+                container: styles.inputContainer,
+                textInputContainer: styles.inputTextContainer,
+                textInput: styles.inputText,
+                predefinedPlacesDescription: styles.inputPlacement,
+                description: styles.resultList
+              }}
               textInputProps={{
                 onFocus: () => {
                   this.state.pharmacy && this.setState({ pharmacy: null });
                 }
               }}
+              enablePoweredByContainer={false}
             />
             {pharmacy && <PharmacyCard pharmacy={pharmacy} />}
           </ScrollView>
@@ -122,7 +129,27 @@ const styles = StyleSheet.create({
   errorBtn: {
     marginTop: 20
   },
-  searchInput: {
-    width: "100%"
+  inputContainer: {
+    marginVertical: 30
+  },
+  inputTextContainer: {
+    backgroundColor: "rgb(56,62,66)",
+    borderTopColor: "#111",
+    borderBottomColor: "#111"
+  },
+  inputText: {
+    backgroundColor: "rgb(47,51,55)",
+    color: "#fff",
+    fontSize: 18
+  },
+  inputPlacement: {
+    color: Colors.tintColor,
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  resultList: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
   }
 });
