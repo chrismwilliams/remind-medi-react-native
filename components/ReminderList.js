@@ -2,22 +2,11 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, List, ListItem } from "react-native-elements";
 
+import { getAllReminders } from "../utils/reminder";
 import Colors from "../constants/Colors";
 
-const ExampleList = [
-  {
-    title: "Tablet 1",
-    amount: 2,
-    period: "2x Daily"
-  },
-  {
-    title: "Tablet 2",
-    amount: 1,
-    period: "Monday, Wednesday"
-  }
-];
-
-export default function reminderList({ reminders = ExampleList }) {
+export default function reminderList() {
+  const reminders = getAllReminders();
   return (
     <View style={styles.reminderContainer}>
       <Text h2 style={styles.reminderHeader}>
@@ -31,6 +20,7 @@ export default function reminderList({ reminders = ExampleList }) {
             subtitle={`Amount: ${item.amount}`}
             leftIcon={{
               name: "calendar-clock",
+              size: 35,
               type: "material-community",
               style: { ...styles.reminderIcon }
             }}
