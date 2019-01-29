@@ -94,7 +94,8 @@ export default class PharmacyCard extends PureComponent {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 3
+    flex: 3,
+    paddingBottom: 80
   },
   pharmacyDetail: {
     flexDirection: "row",
