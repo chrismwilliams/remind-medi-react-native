@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   inputContainer: {
-    marginVertical: 30
+    marginVertical: 10
   },
   inputTextContainer: {
     backgroundColor: "rgb(56,62,66)",
