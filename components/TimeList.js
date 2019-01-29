@@ -37,7 +37,8 @@ export default function timeList({
 
 const styles = StyleSheet.create({
   timeWrapper: {
-    marginBottom: 12,
+    flex: 1,
+    marginBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between"
   },
@@ -45,9 +46,10 @@ const styles = StyleSheet.create({
     marginLeft: 0
   },
   chosenTimeWrapper: {
+    minWidth: 100,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 40,
+    marginRight: 20,
     padding: 10,
     borderWidth: 1,
     borderColor: Colors.tintColor
