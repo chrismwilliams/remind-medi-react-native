@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    paddingVertical: 30,
+    paddingTop: 30,
+    paddingBottom: 100,
     alignItems: "center",
     justifyContent: "space-between"
   },
