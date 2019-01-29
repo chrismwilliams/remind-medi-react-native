@@ -13,21 +13,13 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import OptionList from "./OptionList";
 import TimeList from "./TimeList";
 
+import {
+  PeriodOptions,
+  DailyOptions,
+  DayOptions,
+  MonthlyOptions
+} from "../constants/AlertOptions";
 import Colors from "../constants/Colors";
-
-const PeriodOptions = ["Daily", "Certain Days", "Other"];
-const TimesPerDayOption = 10;
-const DailyOptions = [...Array(TimesPerDayOption)].map((val, i) => i + 1);
-const DayOptions = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
-];
-const MonthlyOptions = [...Array(4)].map((val, i) => i + 1);
 
 export default class ReminderForm extends Component {
   constructor(props) {
@@ -35,7 +27,7 @@ export default class ReminderForm extends Component {
     this.state = {
       errors: [],
       name: "",
-      frequency: "",
+      numOfTablets: "",
       selectedPeriod: "",
       timesPerDay: "",
       selectedDays: [],
@@ -59,6 +51,17 @@ export default class ReminderForm extends Component {
     });
   };
 
+  clearAllOptions = () => {
+    this.setState({
+      timesPerDay: "",
+      selectedDays: [],
+      selectedMonthlyPeriod: "",
+      showTimesList: false,
+      numberOfAlerts: null,
+      timesPicked: []
+    });
+  };
+
   showTimeSlots = amount => {
     let newTimesArray = [...this.state.timesPicked];
     newTimesArray.splice(amount);
@@ -75,6 +78,11 @@ export default class ReminderForm extends Component {
       dateTimePickerVisible: true,
       timePickPointer: index
     });
+  };
+
+  showSaveBtn = () => {
+    // TODO: check if monthly option selected as need to set a start date
+    return this.state.numberOfAlerts === this.state.timesPicked.length;
   };
 
   handleTimePicked = time => {
@@ -102,6 +110,9 @@ export default class ReminderForm extends Component {
     return (
       <Badge
         onPress={() => {
+          if (this.state.selectedPeriod && item != this.state.selectedPeriod) {
+            this.clearAllOptions();
+          }
           this.setState({ selectedPeriod: item });
         }}
         value={item}
@@ -217,13 +228,15 @@ export default class ReminderForm extends Component {
         </FormValidationMessage>
         <FormLabel>Required Amount:</FormLabel>
         <FormInput
-          onChangeText={amount => this.handleInputChange("frequency", amount)}
+          onChangeText={amount =>
+            this.handleInputChange("numOfTablets", amount)
+          }
           keyboardType="numeric"
           inputStyle={styles.inputText}
           ref={this.frequencyInputRef}
         />
         <FormValidationMessage>
-          {this.showInputError("frequency") &&
+          {this.showInputError("numOfTablets") &&
             "Please enter the required amount"}
         </FormValidationMessage>
 
@@ -266,22 +279,40 @@ export default class ReminderForm extends Component {
           />
         ) : null}
         {showTimesList && (
-          <View style={styles.listWrapper}>
-            <Text style={styles.optionText}>Set your alarm(s) below:</Text>
-            <View>
-              <TimeList
-                numberOfAlerts={numberOfAlerts}
-                currentAlertArray={timesPicked}
-                openTimePicker={index => this.showTimePicker(index)}
-              />
-              <DateTimePicker
-                isVisible={dateTimePickerVisible}
-                onConfirm={this.handleTimePicked}
-                onCancel={this.hideTimePicker}
-                mode="time"
-                titleIOS="Pick a time"
-              />
+          <View>
+            <View style={styles.listWrapper}>
+              <Text style={styles.optionText}>Set your alarm(s) below:</Text>
+              <View>
+                <TimeList
+                  numberOfAlerts={numberOfAlerts}
+                  currentAlertArray={timesPicked}
+                  openTimePicker={index => this.showTimePicker(index)}
+                />
+                <DateTimePicker
+                  isVisible={dateTimePickerVisible}
+                  onConfirm={this.handleTimePicked}
+                  onCancel={this.hideTimePicker}
+                  mode="time"
+                  titleIOS="Pick a time"
+                />
+              </View>
             </View>
+            {this.showSaveBtn() && (
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="ADD REMINDER"
+                  icon={{ name: "add-alarm", size: 30 }}
+                  backgroundColor={Colors.tintColor}
+                  fontWeight="bold"
+                  buttonStyle={styles.button}
+                  borderRadius={10}
+                  loadingRight={true}
+                  onPress={() => {
+                    console.log("saving");
+                  }}
+                />
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -292,7 +323,8 @@ export default class ReminderForm extends Component {
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    paddingVertical: 20
+    paddingTop: 20,
+    paddingBottom: 180
   },
   inputText: {
     color: Colors.tintColor,
@@ -320,5 +352,13 @@ const styles = StyleSheet.create({
     padding: 10,
     fontWeight: "bold",
     fontSize: 18
+  },
+  buttonContainer: {
+    marginTop: 40,
+    alignItems: "center"
+  },
+  button: {
+    paddingVertical: 15,
+    paddingHorizontal: 20
   }
 });
