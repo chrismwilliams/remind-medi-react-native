@@ -1,25 +1,23 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
-  Text,
   Badge,
   Button,
-  FormLabel,
   FormInput,
-  FormValidationMessage
+  FormLabel,
+  FormValidationMessage,
+  Text
 } from "react-native-elements";
 import DateTimePicker from "react-native-modal-datetime-picker";
-
-import OptionList from "./OptionList";
-import TimeList from "./TimeList";
-
 import {
-  PeriodOptions,
   DailyOptions,
   DayOptions,
-  MonthlyOptions
+  MonthlyOptions,
+  PeriodOptions
 } from "../constants/AlertOptions";
 import Colors from "../constants/Colors";
+import OptionList from "./OptionList";
+import TimeList from "./TimeList";
 
 export default class ReminderForm extends Component {
   constructor(props) {
@@ -73,11 +71,17 @@ export default class ReminderForm extends Component {
   };
 
   showTimePicker = index => {
-    // TODO: open the picker with the time set previously if set
     this.setState({
       dateTimePickerVisible: true,
       timePickPointer: index
     });
+  };
+
+  currentTimeSelected = () => {
+    const { timesPicked, timePickPointer } = this.state;
+    const timeSelected = timesPicked[timePickPointer];
+    if (!timeSelected) return new Date();
+    return new Date(timeSelected);
   };
 
   showSaveBtn = () => {
@@ -86,12 +90,8 @@ export default class ReminderForm extends Component {
   };
 
   handleTimePicked = time => {
-    const timeDate = new Date(time);
-    const hours = timeDate.getHours();
-    const minutes = timeDate.getMinutes();
-
     let timesArray = [...this.state.timesPicked];
-    timesArray[this.state.timePickPointer] = `${hours}:${minutes}`;
+    timesArray[this.state.timePickPointer] = time;
     this.setState({
       timesPicked: timesArray
     });
@@ -294,6 +294,7 @@ export default class ReminderForm extends Component {
                   onCancel={this.hideTimePicker}
                   mode="time"
                   titleIOS="Pick a time"
+                  date={this.currentTimeSelected()}
                 />
               </View>
             </View>
