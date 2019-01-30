@@ -1,8 +1,15 @@
-import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, Button } from "react-native-elements";
-
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Text } from "react-native-elements";
 import Colors from "../constants/Colors";
+
+const formatTime = time => {
+  if (!time) return "--:--";
+  const timeDate = new Date(time);
+  const hours = String(timeDate.getHours()).padStart(2, 0);
+  const minutes = String(timeDate.getMinutes()).padStart(2, 0);
+  return `${hours}:${minutes}`;
+};
 
 export default function timeList({
   numberOfAlerts,
@@ -26,7 +33,7 @@ export default function timeList({
         />
         <View style={styles.chosenTimeWrapper}>
           <Text style={styles.chosenTime}>
-            {currentAlertArray[i] ? currentAlertArray[i] : "--:--"}
+            {formatTime(currentAlertArray[i])}
           </Text>
         </View>
       </View>
