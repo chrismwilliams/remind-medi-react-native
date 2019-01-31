@@ -1,4 +1,5 @@
 import format from "date-fns/format";
+import isPast from "date-fns/is_past";
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-elements";
@@ -21,9 +22,11 @@ export default class DateList extends Component {
   };
 
   handleDatePicked = date => {
-    this.props.onSubmitDate(date);
-
     this.hideDatePicker();
+
+    // if date < today's date, set to current date
+    if (isPast(date)) date = new Date();
+    this.props.onSubmitDate(date);
   };
 
   hideDatePicker = () => {
