@@ -1,19 +1,19 @@
 import React from "react";
 import { Platform } from "react-native";
 import {
-  createStackNavigator,
-  createBottomTabNavigator
+  createBottomTabNavigator,
+  createStackNavigator
 } from "react-navigation";
-
-import Colors from "../constants/Colors";
-
 import TabBarIcon from "../components/TabBarIcon";
+import Colors from "../constants/Colors";
+import AlertScreen from "../screens/AlertScreen";
 import HomeScreen from "../screens/HomeScreen";
-import ReminderScreen from "../screens/ReminderScreen";
 import LocationScreen from "../screens/LocationScreen";
+import ReminderScreen from "../screens/ReminderScreen";
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen
+  Home: HomeScreen,
+  Alert: AlertScreen
 });
 
 HomeStack.navigationOptions = {
