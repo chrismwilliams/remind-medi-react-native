@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
 
 export default function optionList({
@@ -12,7 +12,7 @@ export default function optionList({
   ...options
 }) {
   return (
-    <View style={styles.listWrapper}>
+    <View style={{ ...styles.listWrapper, marginRight: horizontal ? 0 : 20 }}>
       <Text style={styles.optionText}>{text}</Text>
       <FlatList
         horizontal={horizontal}
