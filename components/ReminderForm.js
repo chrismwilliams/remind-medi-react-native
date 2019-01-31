@@ -8,7 +8,6 @@ import {
   FormValidationMessage,
   Text
 } from "react-native-elements";
-import DateTimePicker from "react-native-modal-datetime-picker";
 import {
   DailyOptions,
   DayOptions,
@@ -16,6 +15,7 @@ import {
   PeriodOptions
 } from "../constants/AlertOptions";
 import Colors from "../constants/Colors";
+import DateList from "./DateList";
 import OptionList from "./OptionList";
 import TimeList from "./TimeList";
 
@@ -27,14 +27,11 @@ export default class ReminderForm extends Component {
       name: "",
       numOfTablets: "",
       selectedPeriod: "",
-      timesPerDay: "",
       selectedDays: [],
-      selectedMonthlyPeriod: "",
+      monthStartDate: null,
       showTimesList: false,
       numberOfAlerts: null,
-      timesPicked: [],
-      timePickPointer: null,
-      dateTimePickerVisible: false
+      timesPicked: []
     };
     this.frequencyInputRef = React.createRef();
   }
@@ -51,9 +48,7 @@ export default class ReminderForm extends Component {
 
   clearAllOptions = () => {
     this.setState({
-      timesPerDay: "",
       selectedDays: [],
-      selectedMonthlyPeriod: "",
       showTimesList: false,
       numberOfAlerts: null,
       timesPicked: []
@@ -70,36 +65,23 @@ export default class ReminderForm extends Component {
     });
   };
 
-  showTimePicker = index => {
-    this.setState({
-      dateTimePickerVisible: true,
-      timePickPointer: index
-    });
-  };
-
-  currentTimeSelected = () => {
-    const { timesPicked, timePickPointer } = this.state;
-    const timeSelected = timesPicked[timePickPointer];
-    if (!timeSelected) return new Date();
-    return new Date(timeSelected);
-  };
-
   showSaveBtn = () => {
     // TODO: check if monthly option selected as need to set a start date
     return this.state.numberOfAlerts === this.state.timesPicked.length;
   };
 
-  handleTimePicked = time => {
+  updateTimePicked = (index, time) => {
     let timesArray = [...this.state.timesPicked];
-    timesArray[this.state.timePickPointer] = time;
+    timesArray[index] = time;
     this.setState({
       timesPicked: timesArray
     });
-    this.hideTimePicker();
   };
 
-  hideTimePicker = () => {
-    this.setState({ dateTimePickerVisible: false, timePickPointer: null });
+  updateDatePicked = date => {
+    // if date < today's date, set to current date
+
+    this.setState({ monthStartDate: date });
   };
 
   showInputError = inputName => {
@@ -133,15 +115,12 @@ export default class ReminderForm extends Component {
     return (
       <Badge
         onPress={() => {
-          this.setState({
-            timesPerDay: item
-          });
           this.showTimeSlots(item);
         }}
         value={item}
         containerStyle={{
           backgroundColor:
-            this.state.timesPerDay === item ? Colors.tintColor : "grey"
+            this.state.numberOfAlerts === item ? Colors.tintColor : "grey"
         }}
         wrapperStyle={[
           styles.badgeWrapper,
@@ -179,39 +158,14 @@ export default class ReminderForm extends Component {
     );
   };
 
-  monthItem = ({ item, index }) => {
-    return (
-      <Badge
-        onPress={() => {
-          this.setState({ selectedMonthlyPeriod: item });
-          this.showTimeSlots(item);
-        }}
-        value={item}
-        containerStyle={{
-          backgroundColor:
-            this.state.selectedMonthlyPeriod === item
-              ? Colors.tintColor
-              : "grey"
-        }}
-        wrapperStyle={[
-          styles.badgeWrapper,
-          { marginLeft: this.isFirstItem(index + 1) ? 0 : 12 }
-        ]}
-        textStyle={styles.badgeText}
-      />
-    );
-  };
-
   render() {
     let {
       selectedPeriod,
-      timesPerDay,
       selectedDays,
-      selectedMonthlyPeriod,
       showTimesList,
       numberOfAlerts,
       timesPicked,
-      dateTimePickerVisible
+      monthStartDate
     } = this.state;
     return (
       <View style={styles.formContainer}>
@@ -254,7 +208,7 @@ export default class ReminderForm extends Component {
             text="Times per Day:"
             horizontal={true}
             data={DailyOptions}
-            extraData={timesPerDay}
+            extraData={numberOfAlerts}
             renderItem={this.timesItem}
             extractor={item => item.toString()}
           />
@@ -273,31 +227,35 @@ export default class ReminderForm extends Component {
             text="Times per month:"
             horizontal={true}
             data={MonthlyOptions}
-            extraData={selectedMonthlyPeriod}
-            renderItem={this.monthItem}
+            extraData={numberOfAlerts}
+            renderItem={this.timesItem}
             extractor={item => item.toString()}
           />
         ) : null}
+
         {showTimesList && (
           <View>
             <View style={styles.listWrapper}>
               <Text style={styles.optionText}>Set your alarm(s) below:</Text>
-              <View>
-                <TimeList
-                  numberOfAlerts={numberOfAlerts}
-                  currentAlertArray={timesPicked}
-                  openTimePicker={index => this.showTimePicker(index)}
-                />
-                <DateTimePicker
-                  isVisible={dateTimePickerVisible}
-                  onConfirm={this.handleTimePicked}
-                  onCancel={this.hideTimePicker}
-                  mode="time"
-                  titleIOS="Pick a time"
-                  date={this.currentTimeSelected()}
+              <TimeList
+                numberOfAlerts={numberOfAlerts}
+                currentAlertArray={timesPicked}
+                onSubmitTime={(index, time) =>
+                  this.updateTimePicked(index, time)
+                }
+              />
+            </View>
+            {selectedPeriod === "Other" && (
+              <View style={styles.listWrapper}>
+                <Text style={styles.optionText}>
+                  Select the initial start date:
+                </Text>
+                <DateList
+                  currentSelectedDate={monthStartDate}
+                  onSubmitDate={date => this.updateDatePicked(date)}
                 />
               </View>
-            </View>
+            )}
             {this.showSaveBtn() && (
               <View style={styles.buttonContainer}>
                 <Button
