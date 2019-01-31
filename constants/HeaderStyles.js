@@ -5,6 +5,7 @@ export default {
     backgroundColor: Colors.primaryColor,
     borderBottomWidth: 0
   },
+  headerTintColor: Colors.tintColor,
   headerTitleStyle: {
     color: "#fff"
   }
