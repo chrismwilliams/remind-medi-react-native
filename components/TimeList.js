@@ -7,7 +7,7 @@ import Colors from "../constants/Colors";
 
 const formatTime = time => {
   if (!time) return "--:--";
-  const formattedTime = format(time, "HH:mm:a");
+  const formattedTime = format(time, "hh:mm:A");
   return formattedTime;
 };
 
