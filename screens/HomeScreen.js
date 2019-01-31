@@ -1,23 +1,21 @@
+import { WebBrowser } from "expo";
 import React from "react";
 import {
-  Image,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
-  View,
-  StatusBar
+  View
 } from "react-native";
-import { Text, Icon } from "react-native-elements";
-import { WebBrowser } from "expo";
-
-import HeaderStyles from "../constants/HeaderStyles";
+import { Icon, Text } from "react-native-elements";
 import ReminderList from "../components/ReminderList";
-
 import Colors from "../constants/Colors";
+import HeaderStyles from "../constants/HeaderStyles";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "My Reminders",
+    headerBackTitle: "Back",
     ...HeaderStyles
   };
 
@@ -41,7 +39,7 @@ export default class HomeScreen extends React.Component {
             </Text>
           </View>
 
-          <ReminderList />
+          <ReminderList navigation={this.props.navigation} />
 
           <View style={styles.linkContainer}>
             <Text style={styles.infoText}>
