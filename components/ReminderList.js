@@ -1,11 +1,10 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, List, ListItem } from "react-native-elements";
-
-import { getAllReminders } from "../utils/reminder";
+import { StyleSheet, View } from "react-native";
+import { List, ListItem, Text } from "react-native-elements";
 import Colors from "../constants/Colors";
+import { getAllReminders } from "../utils/reminder";
 
-export default function reminderList() {
+export default function reminderList(props) {
   const reminders = getAllReminders();
   return (
     <View style={styles.reminderContainer}>
@@ -13,17 +12,18 @@ export default function reminderList() {
         Reminders
       </Text>
       <List>
-        {reminders.map(item => (
+        {reminders.map(alert => (
           <ListItem
-            key={item.title}
-            title={item.title}
-            subtitle={`Amount: ${item.amount}`}
+            key={alert.title}
+            title={alert.title}
+            subtitle={`Amount: ${alert.amount}`}
             leftIcon={{
               name: "calendar-clock",
               size: 35,
               type: "material-community",
               style: { ...styles.reminderIcon }
             }}
+            onPress={() => props.navigation.navigate("Alert", { id: alert.id })}
           />
         ))}
       </List>
