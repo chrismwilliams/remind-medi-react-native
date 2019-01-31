@@ -51,7 +51,8 @@ export default class ReminderForm extends Component {
       selectedDays: [],
       showTimesList: false,
       numberOfAlerts: null,
-      timesPicked: []
+      timesPicked: [],
+      monthStartDate: null
     });
   };
 
@@ -65,9 +66,23 @@ export default class ReminderForm extends Component {
     });
   };
 
+  showStartDate = () => {
+    const { selectedPeriod, numberOfAlerts, timesPicked } = this.state;
+    return selectedPeriod === "Other" && numberOfAlerts === timesPicked.length;
+  };
+
   showSaveBtn = () => {
-    // TODO: check if monthly option selected as need to set a start date
-    return this.state.numberOfAlerts === this.state.timesPicked.length;
+    const {
+      selectedPeriod,
+      numberOfAlerts,
+      timesPicked,
+      monthStartDate
+    } = this.state;
+
+    // check if monthly option selected and a date set
+    if (selectedPeriod === "Other" && !monthStartDate) return false;
+
+    return numberOfAlerts === timesPicked.length;
   };
 
   updateTimePicked = (index, time) => {
@@ -79,8 +94,6 @@ export default class ReminderForm extends Component {
   };
 
   updateDatePicked = date => {
-    // if date < today's date, set to current date
-
     this.setState({ monthStartDate: date });
   };
 
@@ -245,7 +258,7 @@ export default class ReminderForm extends Component {
                 }
               />
             </View>
-            {selectedPeriod === "Other" && (
+            {this.showStartDate() && (
               <View style={styles.listWrapper}>
                 <Text style={styles.optionText}>
                   Select the initial start date:
