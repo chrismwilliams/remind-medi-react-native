@@ -78,9 +78,8 @@ export default class PharmacyCard extends PureComponent {
           )}
           {pharmacy.website && (
             <Button
-              style={styles.websiteBtn}
+              buttonStyle={styles.websiteBtn}
               backgroundColor={Colors.tintColor}
-              rounded
               fontWeight="bold"
               title="Visit Website"
               onPress={() => this._openBrowser(pharmacy.website)}
@@ -137,6 +136,8 @@ const styles = StyleSheet.create({
     color: Colors.tintColor
   },
   websiteBtn: {
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 10,
+    borderRadius: 10
   }
 });
