@@ -1,15 +1,16 @@
+// temp file
 const ExampleList = [
   {
     id: "abc123",
-    title: "Tablet 1",
-    amount: 2,
-    period: "2x Daily"
+    name: "Paracetamol",
+    numOfTablets: 2,
+    selectedPeriod: "Daily"
   },
   {
     id: "xyz789",
-    title: "Tablet 2",
-    amount: 1,
-    period: "Monday, Wednesday"
+    name: "Ibuprofen",
+    numOfTablets: 1,
+    selectedPeriod: "Certain Days"
   }
 ];
 
@@ -19,4 +20,8 @@ export const getAllReminders = () => {
 
 export const getReminder = id => {
   return ExampleList.find(alert => alert.id === id);
+};
+
+export const deleteReminder = id => {
+  ExampleList.splice(ExampleList.findIndex(i => i.id === id), 1);
 };
