@@ -14,9 +14,9 @@ export default function reminderList(props) {
       <List>
         {reminders.map(alert => (
           <ListItem
-            key={alert.title}
-            title={alert.title}
-            subtitle={`Amount: ${alert.amount}`}
+            key={alert.id}
+            title={alert.name}
+            subtitle={`Amount: ${alert.numOfTablets}`}
             leftIcon={{
               name: "calendar-clock",
               size: 35,
