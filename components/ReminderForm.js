@@ -310,7 +310,6 @@ export default class ReminderForm extends Component {
                   backgroundColor={Colors.tintColor}
                   fontWeight="bold"
                   buttonStyle={styles.button}
-                  borderRadius={10}
                   loadingRight={true}
                   onPress={() => this.saveAlert()}
                   disabled={this.state.errors.length ? true : false}
@@ -363,6 +362,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 15,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    borderRadius: 10
   }
 });
