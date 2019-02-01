@@ -41,6 +41,13 @@ export default class ReminderForm extends Component {
   };
 
   handleInputChange = (stateName, value) => {
+    // clear error if set
+    if (this.state.errors.includes(stateName)) {
+      this.setState({
+        errors: this.state.errors.filter(err => err !== stateName)
+      });
+    }
+
     this.setState({
       [stateName]: value
     });
@@ -83,6 +90,31 @@ export default class ReminderForm extends Component {
     if (selectedPeriod === "Other" && !monthStartDate) return false;
 
     return numberOfAlerts === timesPicked.length;
+  };
+
+  saveAlert = () => {
+    const alertObj = JSON.parse(JSON.stringify(this.state));
+
+    // check user's options
+    if (!alertObj.name || alertObj.name.length < 4) {
+      if (!alertObj.errors.includes("name")) {
+        alertObj.errors = ["name", ...alertObj.errors];
+      }
+    }
+    if (!alertObj.numOfTablets) {
+      if (!alertObj.errors.includes("numOfTablets")) {
+        alertObj.errors = ["numOfTablets", ...alertObj.errors];
+      }
+    }
+
+    if (alertObj.errors.length) {
+      this.setState({ errors: [...alertObj.errors] });
+      return;
+    }
+
+    delete alertObj.errors;
+    delete alertObj.showTimesList;
+    this.props.submitForm(alertObj);
   };
 
   updateTimePicked = (index, time) => {
@@ -191,7 +223,8 @@ export default class ReminderForm extends Component {
           blurOnSubmit={false}
         />
         <FormValidationMessage>
-          {this.showInputError("name") && "This field is required"}
+          {this.showInputError("name") &&
+            "This field is required, and include more than 4 characters"}
         </FormValidationMessage>
         <FormLabel>Required Amount:</FormLabel>
         <FormInput
@@ -204,7 +237,7 @@ export default class ReminderForm extends Component {
         />
         <FormValidationMessage>
           {this.showInputError("numOfTablets") &&
-            "Please enter the required amount"}
+            "Please enter a required amount"}
         </FormValidationMessage>
 
         <OptionList
@@ -279,9 +312,8 @@ export default class ReminderForm extends Component {
                   buttonStyle={styles.button}
                   borderRadius={10}
                   loadingRight={true}
-                  onPress={() => {
-                    console.log("saving");
-                  }}
+                  onPress={() => this.saveAlert()}
+                  disabled={this.state.errors.length ? true : false}
                 />
               </View>
             )}
