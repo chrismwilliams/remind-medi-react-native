@@ -2,8 +2,10 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Badge, Button, Text } from "react-native-elements";
 
-export default function alertCard() {
-  const { alert } = this.props;
+import Colors from "../constants/Colors";
+
+export default function alertCard(props) {
+  const { alert, onPressDelete } = props;
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>{alert.name}</Text>
@@ -31,7 +33,7 @@ export default function alertCard() {
         containerViewStyle={styles.buttonContainer}
         buttonStyle={styles.deleteButton}
         fontWeight="bold"
-        onPress={this.props.onPressDelete}
+        onPress={onPressDelete}
       />
     </View>
   );
