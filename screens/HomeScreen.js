@@ -1,5 +1,5 @@
+import React, { Component } from "react";
 import { WebBrowser } from "expo";
-import React from "react";
 import {
   ScrollView,
   StatusBar,
@@ -12,7 +12,7 @@ import ReminderList from "../components/ReminderList";
 import Colors from "../constants/Colors";
 import HeaderStyles from "../constants/HeaderStyles";
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends Component {
   static navigationOptions = {
     title: "My Reminders",
     headerBackTitle: "Back",
