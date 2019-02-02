@@ -1,8 +1,4 @@
-import { ADD_ALERT, DELETE_ALERT, GET_ALERTS } from "./types";
-
-export const getAlerts = () => ({
-  type: GET_ALERTS
-});
+import { ADD_ALERT, DELETE_ALERT } from "./types";
 
 export const deleteAlert = id => ({
   type: DELETE_ALERT,
