@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Badge, Button, Text } from "react-native-elements";
+import { Badge, Button, Icon, Text } from "react-native-elements";
+import format from "date-fns/format";
 
 import Colors from "../constants/Colors";
 
@@ -8,7 +9,14 @@ export default function alertCard(props) {
   const { alert, onPressDelete } = props;
   return (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>{alert.name}</Text>
+      <View>
+        <Icon
+          name="pill"
+          type="material-community"
+          color={Colors.primaryColor}
+        />
+        <Text style={styles.cardTitle}>{alert.name}</Text>
+      </View>
       <View style={styles.cardContent}>
         <View style={styles.subContent}>
           <Text style={styles.subText}>Required Amount</Text>
@@ -19,12 +27,53 @@ export default function alertCard(props) {
           />
         </View>
         <View style={styles.subContent}>
-          <Text style={styles.subText}>Alert Frequency</Text>
+          <Text style={styles.subText}>Frequency</Text>
           <Badge
             value={alert.selectedPeriod}
             containerStyle={styles.badgeContainer}
             textStyle={styles.badgeText}
           />
+        </View>
+        {alert.selectedPeriod === "Certain Days" && (
+          <View style={styles.subContent}>
+            <Text style={styles.subText}>Chosen Days</Text>
+            <View>
+              {alert.selectedDays.map(day => (
+                <Badge
+                  key={day}
+                  value={day}
+                  containerStyle={{
+                    ...styles.badgeContainer,
+                    ...styles.innerBadge
+                  }}
+                  textStyle={styles.badgeText}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+        <View style={styles.subContent}>
+          <View style={styles.alertContainer}>
+            <Text style={styles.subText}>Alerts</Text>
+            <Badge
+              value={alert.numberOfAlerts}
+              containerStyle={styles.alertBadge}
+              textStyle={styles.alertBadgeText}
+            />
+          </View>
+          <View>
+            {alert.timesPicked.map(time => (
+              <Badge
+                key={time}
+                value={format(time, "hh:mm:A")}
+                containerStyle={{
+                  ...styles.badgeContainer,
+                  ...styles.innerBadge
+                }}
+                textStyle={styles.badgeText}
+              />
+            ))}
+          </View>
         </View>
       </View>
       <Button
@@ -42,7 +91,8 @@ export default function alertCard(props) {
 const styles = StyleSheet.create({
   card: {
     marginTop: 20,
-    marginHorizontal: 30,
+    marginBottom: 120,
+    marginHorizontal: 20,
     padding: 30,
     backgroundColor: "#fff",
     borderRadius: 15
@@ -50,7 +100,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     textAlign: "center",
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: Colors.primaryColor
   },
   cardContent: {
     marginTop: 20,
@@ -59,7 +110,7 @@ const styles = StyleSheet.create({
     borderTopColor: "#999"
   },
   subContent: {
-    marginTop: 10,
+    marginTop: 25,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
@@ -73,7 +124,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.tintColor
   },
   badgeText: {
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 16,
+    padding: 7
+  },
+  innerBadge: {
+    marginBottom: 4
+  },
+  alertContainer: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  alertBadge: {
+    marginLeft: 7
+  },
+  alertBadgeText: {
+    padding: 3
   },
   buttonContainer: {
     marginTop: 20,
