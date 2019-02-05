@@ -1,47 +1,39 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "react-native-elements";
+
+import { deleteAlert } from "../redux/actions/alertActions";
 
 import StyledTitle from "../components/StyledTitle";
 import AlertCard from "../components/AlertCard";
 
 import Colors from "../constants/Colors";
 import HeaderStyles from "../constants/HeaderStyles";
-import { getReminder, deleteReminder } from "../utils/reminder";
 
-export default class AlertScreen extends Component {
+class AlertScreen extends Component {
   static navigationOptions = {
     title: "Reminder",
     ...HeaderStyles
   };
 
-  state = {
-    alert: null
-  };
-
-  componentDidMount() {
-    const { navigation } = this.props;
-    const alertID = navigation.getParam("id", "");
-    this.setState({ alert: getReminder(alertID) });
-  }
-
   onPressDelete = () => {
     const { navigation } = this.props;
 
     // delete alert
-    deleteReminder(this.state.alert.id);
+    this.props.deleteAlert(this.props.alert.id);
 
     // navigate back to home screen
     navigation.navigate("Home");
   };
 
   render() {
-    const { alert } = this.state;
+    const { alert } = this.props;
     return (
       <View style={styles.backgroundContainer}>
         {alert ? (
           <ScrollView style={styles.container}>
-            <StyledTitle>Your {alert.name} Alert</StyledTitle>
+            <StyledTitle>{alert.name} Alert</StyledTitle>
             <AlertCard alert={alert} onPressDelete={this.onPressDelete} />
           </ScrollView>
         ) : (
@@ -70,3 +62,21 @@ const styles = StyleSheet.create({
     color: "#fff"
   }
 });
+
+const mapStateToProps = (state, ownProps) => {
+  const { navigation } = ownProps;
+  const alertID = navigation.getParam("id", "");
+
+  return {
+    alert: state.alerts.find(i => i.id === alertID)
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  deleteAlert: id => dispatch(deleteAlert(id))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AlertScreen);
