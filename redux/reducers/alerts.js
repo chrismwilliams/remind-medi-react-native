@@ -5,7 +5,7 @@ const alerts = (state = [], action) => {
     case ADD_ALERT:
       return [...state, { ...action.payload }];
     case DELETE_ALERT:
-      return state.filter(alert => alert._id !== action.payload);
+      return state.filter(alert => alert.id !== action.payload);
     default:
       return state;
   }
