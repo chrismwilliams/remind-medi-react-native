@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { ScrollView, StyleSheet } from "react-native";
+import { connect } from "react-redux";
+
+import { addAlert } from "../redux/actions/alertActions";
 
 import ReminderForm from "../components/ReminderForm";
 import StyledTitle from "../components/StyledTitle";
@@ -7,25 +10,26 @@ import Colors from "../constants/Colors";
 import HeaderStyles from "../constants/HeaderStyles";
 import { uniqueID } from "../utils/functions";
 
-export default class ReminderScreen extends Component {
+class ReminderScreen extends Component {
   static navigationOptions = {
     title: "New Reminder",
     ...HeaderStyles
   };
 
   onSubmitForm = alertObj => {
-    console.log(alertObj);
-
-    // period first
+    const { navigation } = this.props;
 
     // add unique id
     const id = uniqueID();
+    alertObj.id = id;
 
     // save
+    this.props.addAlert(alertObj);
 
     // clear form
 
     // navigate to home screen
+    navigation.navigate("Home");
   };
 
   render() {
@@ -45,3 +49,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryColor
   }
 });
+
+const mapDispatchToProps = dispatch => ({
+  addAlert: alert => dispatch(addAlert(alert))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ReminderScreen);
