@@ -9,33 +9,36 @@ import {
   Text
 } from "react-native-elements";
 import isSameMinute from "date-fns/is_same_minute";
-import isSameHour from "date-fns/is_same_hour";
 
+import { sortDays } from "../utils/functions";
 import {
   DailyOptions,
   DayOptions,
   MonthlyOptions,
   PeriodOptions
 } from "../constants/AlertOptions";
-import Colors from "../constants/Colors";
 import DateList from "./DateList";
 import OptionList from "./OptionList";
 import TimeList from "./TimeList";
 
+import Colors from "../constants/Colors";
+
+const initialState = {
+  errors: [],
+  name: "",
+  numOfTablets: "",
+  selectedPeriod: "",
+  selectedDays: [],
+  monthStartDate: null,
+  showTimesList: false,
+  numberOfAlerts: null,
+  timesPicked: []
+};
+
 export default class ReminderForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      errors: [],
-      name: "",
-      numOfTablets: "",
-      selectedPeriod: "",
-      selectedDays: [],
-      monthStartDate: null,
-      showTimesList: false,
-      numberOfAlerts: null,
-      timesPicked: []
-    };
+    this.state = { ...initialState };
     this.frequencyInputRef = React.createRef();
   }
 
@@ -117,6 +120,12 @@ export default class ReminderForm extends Component {
 
     delete alertObj.errors;
     delete alertObj.showTimesList;
+
+    // clear
+    this.setState({
+      ...initialState
+    });
+
     this.props.submitForm(alertObj);
   };
 
@@ -197,10 +206,22 @@ export default class ReminderForm extends Component {
           } else {
             updatedDays.splice(updatedDays.indexOf(item), 1);
           }
+
+          // sort
+          updatedDays = sortDays(updatedDays);
+
           this.setState({
             selectedDays: updatedDays
           });
-          this.showTimeSlots(updatedDays.length);
+
+          if (updatedDays.length) {
+            this.showTimeSlots(1);
+          } else {
+            this.setState({
+              numberOfAlerts: null,
+              showTimesList: false
+            });
+          }
         }}
         value={item}
         containerStyle={{
@@ -216,6 +237,8 @@ export default class ReminderForm extends Component {
 
   render() {
     let {
+      name,
+      numOfTablets,
       selectedPeriod,
       selectedDays,
       showTimesList,
@@ -228,6 +251,7 @@ export default class ReminderForm extends Component {
         <FormLabel>Medication Name:</FormLabel>
         <FormInput
           onChangeText={text => this.handleInputChange("name", text)}
+          value={name}
           inputStyle={styles.inputText}
           returnKeyType="next"
           onSubmitEditing={() => this.frequencyInputRef.current.focus()}
@@ -242,6 +266,7 @@ export default class ReminderForm extends Component {
           onChangeText={amount =>
             this.handleInputChange("numOfTablets", amount)
           }
+          value={numOfTablets}
           keyboardType="numeric"
           inputStyle={styles.inputText}
           ref={this.frequencyInputRef}
