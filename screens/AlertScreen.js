@@ -5,7 +5,6 @@ import { Text } from "react-native-elements";
 
 import { deleteAlert } from "../redux/actions/alertActions";
 
-import StyledTitle from "../components/StyledTitle";
 import AlertCard from "../components/AlertCard";
 
 import Colors from "../constants/Colors";
@@ -33,7 +32,6 @@ class AlertScreen extends Component {
       <View style={styles.backgroundContainer}>
         {alert ? (
           <ScrollView style={styles.container}>
-            <StyledTitle>{alert.name} Alert</StyledTitle>
             <AlertCard alert={alert} onPressDelete={this.onPressDelete} />
           </ScrollView>
         ) : (
