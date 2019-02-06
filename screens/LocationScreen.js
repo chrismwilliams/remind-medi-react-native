@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
   },
   inputTextContainer: {
     backgroundColor: "rgb(56,62,66)",
-    borderTopColor: "#111",
-    borderBottomColor: "#111"
+    borderTopWidth: 0,
+    borderBottomWidth: 0
   },
   inputText: {
     backgroundColor: "rgb(47,51,55)",
