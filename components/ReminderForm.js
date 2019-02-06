@@ -8,6 +8,9 @@ import {
   FormValidationMessage,
   Text
 } from "react-native-elements";
+import isSameMinute from "date-fns/is_same_minute";
+import isSameHour from "date-fns/is_same_hour";
+
 import {
   DailyOptions,
   DayOptions,
@@ -120,8 +123,16 @@ export default class ReminderForm extends Component {
   updateTimePicked = (index, time) => {
     let timesArray = [...this.state.timesPicked];
     timesArray[index] = time;
+
+    // filter similar times
+    const filteredTimesArray = timesArray
+      .sort()
+      .filter(
+        (val, index, arr) => !index || !isSameMinute(val, arr[index - 1])
+      );
+
     this.setState({
-      timesPicked: timesArray
+      timesPicked: filteredTimesArray
     });
   };
 
