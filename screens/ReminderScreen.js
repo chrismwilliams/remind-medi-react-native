@@ -23,10 +23,10 @@ class ReminderScreen extends Component {
     const id = uniqueID();
     alertObj.id = id;
 
+    // TODO: set reminders: waiting for expo SDK ver to finalise iOS notifications...
+
     // save
     this.props.addAlert(alertObj);
-
-    // clear form
 
     // navigate to home screen
     navigation.navigate("Home");
