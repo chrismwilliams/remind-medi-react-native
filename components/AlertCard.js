@@ -54,7 +54,9 @@ export default function alertCard(props) {
         )}
         <View style={styles.subContent}>
           <View style={styles.alertContainer}>
-            <Text style={styles.subText}>Alerts</Text>
+            <Text style={styles.subText}>
+              Alert{alert.numberOfAlerts > 1 ? "s" : ""}
+            </Text>
             <Badge
               value={alert.numberOfAlerts}
               containerStyle={styles.alertBadge}
