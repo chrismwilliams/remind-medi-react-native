@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { Icon, Text } from "react-native-elements";
+import { Button, Icon, Text } from "react-native-elements";
+
+import { deleteAllNotifications } from "../utils/notifications";
+
 import ReminderList from "../components/ReminderList";
 import Colors from "../constants/Colors";
 import HeaderStyles from "../constants/HeaderStyles";
@@ -17,6 +20,11 @@ export default class HomeScreen extends Component {
     title: "My Reminders",
     headerBackTitle: "Back",
     ...HeaderStyles
+  };
+
+  deleteEveryThing = async () => {
+    await deleteAllNotifications();
+    console.log("done!");
   };
 
   render() {
@@ -40,6 +48,15 @@ export default class HomeScreen extends Component {
           </View>
 
           <ReminderList navigation={this.props.navigation} />
+
+          {__DEV__ && (
+            <Button
+              title="Delete Notifications"
+              icon={{ name: "exclamation-triangle", type: "font-awesome" }}
+              buttonStyle={styles.warnButton}
+              onPress={this.deleteEveryThing}
+            />
+          )}
 
           <View style={styles.linkContainer}>
             <Text style={styles.infoText}>
@@ -100,6 +117,11 @@ const styles = StyleSheet.create({
   },
   linkContainer: {
     alignItems: "center"
+  },
+  warnButton: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: Colors.errorColor
   },
   infoText: {
     marginBottom: 10,
